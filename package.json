@@ -1,6 +1,6 @@
 {
   "name": "ec2-sns",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AWS SNS client that automatically subscribes to topic and unsubscribes when terminated. Designed especially for AWS EC2 Instances and Docker",
   "main": "index.js",
   "scripts": {
@@ -21,8 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.46.0",
-    "string": "^3.3.3",
-    "wait.for": "^0.6.6"
+    "string": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
