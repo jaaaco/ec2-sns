@@ -1,3 +1,5 @@
+![Travis build status](https://travis-ci.org/jaaaco/ec2-sns.svg?branch=master)
+
 # EC2 SNS Client
 
 AWS SNS Client that:
