@@ -14,6 +14,10 @@
     "docker"
   ],
   "author": "Jakub Wietrzyk <jakub@wietrzyk.com>",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/jaaaco/ec2-sns.git"
+  },
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.46.0",
