@@ -16,10 +16,20 @@ Designed to run in AWS ECS / Docker environment.
 const SNS = require('ec2-sns');
 const sns = new SNS();
 
+// receive messages
 sns.on('message', message => {
   console.log('Topic', message.topic);
   console.log('Body', message.body); // must be JSON
 });
+
+// send message to topic
+sns.on('ready', () => {
+  sns.send({
+    subject: 'my-subject',
+    message: {foo: 'bar'}
+  });
+});
+
 ```
 
 ## Environment variables 
