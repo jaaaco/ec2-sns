@@ -34,7 +34,8 @@ module.exports.SNS = class SNS extends EventEmitter {
     }
 
     process.on('SIGINT', unsubscribeAndTerminate);
-    process.on('uncaughtException', () => {
+    process.on('uncaughtException', (e) => {
+      console.log('uncaughtException', e);
       unsubscribeAndTerminate(1);
     });
 
@@ -127,8 +128,7 @@ module.exports.SNS = class SNS extends EventEmitter {
           done();
         });
       }).on('error', (e) => {
-        console.error('Unable to get public IP:', e);
-        process.exit(1);
+        throw new Error('Unable to get public IP', e);
       });
     }
   }

@@ -200,4 +200,24 @@ describe('SNS Class', function () {
     req.write(body);
     req.end();
   });
+
+  describe('#getEndpoint', function() {
+    before(function() {
+      nock('http://169.254.169.254')
+        .get('/latest/meta-data/local-ipv4')
+        .reply(500);
+    });
+    it('should throw error one network problems', function() {
+      const doneCB = sinon.spy();
+      (function(){this.sns.getEndpoint(doneCB)}).should.throw();
+      doneCB.should.not.be.called();
+    });
+    it('should return ednpoint from env if defined', function() {
+      process.env.AWS_SUBSCRIPTION_ENDPOINT = 'test-env';
+      const doneCB = sinon.spy();
+      this.sns.getEndpoint(doneCB);
+      this.sns.subscriptionEndpoint.should.equal('test-env');
+      doneCB.should.be.calledOnce();
+    });
+  });
 });
