@@ -4,8 +4,7 @@
   "description": "AWS SNS client that automatically subscribes to topic and unsubscribes when terminated. Designed especially for AWS EC2 Instances and Docker",
   "main": "index.js",
   "scripts": {
-    "coverage": "./node_modules/.bin/nyc --reporter=text-lcov ./node_modules/.bin/mocha | ./node_modules/.bin/coveralls",
-    "test": "./node_modules/.bin/nyc --reporter=text ./node_modules/.bin/mocha",
+    "test": "./node_modules/.bin/nyc --reporter=text ./node_modules/.bin/mocha && ./node_modules/.bin/nyc --reporter=text-lcov ./node_modules/.bin/mocha | ./node_modules/.bin/coveralls",
     "start": "node index.js"
   },
   "keywords": [
