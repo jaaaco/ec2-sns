@@ -1,3 +1,5 @@
+'use strict';
+
 const AWS = require('aws-sdk');
 const http = require('http');
 const S = require('string');
@@ -20,7 +22,6 @@ module.exports.SNS = class SNS extends EventEmitter {
     if (!process.env.AWS_TOPIC_ARN) {
       process.env.AWS_TOPIC_ARN = 'SOME_TOPIC_ARN';
     }
-
     function unsubscribeAndTerminate(exitCode = 0) {
       if (!this.subscriptionArn) {
         process.exit(exitCode);
@@ -102,7 +103,7 @@ module.exports.SNS = class SNS extends EventEmitter {
     });
   }
 
-  send({ subject, message = {}}) {
+  send({ subject, message = {} }) {
     this.sns.publish({
       Subject: subject,
       Message: JSON.stringify(message),
