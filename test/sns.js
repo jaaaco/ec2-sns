@@ -18,13 +18,14 @@ const http = require('http');
 
 describe('SNS Class', function () {
   before(function (done) {
+
     nock('http://169.254.169.254')
       .get('/latest/meta-data/public-ipv4')
       .reply(200, '\n127.0.0.1\n');
 
     nock('https://sns.eu-west-1.amazonaws.com:443', {"encodedQueryParams":true})
       .post('/', (body) => {
-        return body.Action == 'Subscribe'
+        return body.Action === 'Subscribe';
       })
       .reply(function(uri, requestBody) {
         const body = `{

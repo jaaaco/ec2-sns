@@ -13,15 +13,17 @@ Designed to run in AWS ECS / Docker environment.
 
 ```
 const SNS = require('ec2-sns');
-const sns = new SNS();
+const sns = new SNS({
+  port: 8081 // default port
+});
 
-// receive messages
+// receive messages from SNS Topic
 sns.on('message', message => {
-  console.log('Topic', message.topic);
+  console.log('Subject', message.subject);
   console.log('Body', message.body); // must be JSON
 });
 
-// send message to topic
+// send message to SNS Topic
 sns.on('ready', () => {
   sns.send({
     subject: 'my-subject',

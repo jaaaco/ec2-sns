@@ -6,9 +6,11 @@ const S = require('string');
 const EventEmitter = require('events');
 
 module.exports.SNS = class SNS extends EventEmitter {
-  constructor() {
+  constructor(options) {
     super();
+    const initOptions = options || {};
 
+    this.port = initOptions.port || '8081';
     this.subscriptionArn = false;
     this.subscriptionEndpoint = false;
 
@@ -85,7 +87,7 @@ module.exports.SNS = class SNS extends EventEmitter {
       });
     });
 
-    this.server.listen(8081, () => {
+    this.server.listen(this.port, () => {
       done();
     });
   }
@@ -109,7 +111,7 @@ module.exports.SNS = class SNS extends EventEmitter {
     } else {
       // getting public IP, check http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
       this.getIP((ip) => {
-        this.subscriptionEndpoint = `http://${ip}:8081`;
+        this.subscriptionEndpoint = `http://${ip}:${this.port}`;
         done();
       });
     }
