@@ -25,7 +25,6 @@ module.exports.SNS = class SNS extends EventEmitter {
       process.env.AWS_TOPIC_ARN = 'SOME_TOPIC_ARN';
     }
 
-    console.log('pens', process.env.NO_SUBSCRIPTION);
     if (!process.env.NO_SUBSCRIPTION) {
       this.getEndpoint(() => {
         this.startServer(() => {
@@ -98,14 +97,11 @@ module.exports.SNS = class SNS extends EventEmitter {
       throw new Error('Invalid data to SNS.send()');
     }
 
-    console.log('sending');
-
     this.sns.publish({
       Subject: data.subject,
       Message: JSON.stringify(data.message),
       TopicArn: process.env.AWS_TOPIC_ARN,
     }, (error, result) => {
-      console.log('sss', error, result)
       if (error) {
         throw error;
       }
