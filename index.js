@@ -98,7 +98,9 @@ module.exports.SNS = class SNS extends EventEmitter {
       Message: JSON.stringify(data.message),
       TopicArn: process.env.AWS_TOPIC_ARN,
     }, (error) => {
-      throw error;
+      if (error) {
+        throw error;
+      }
     });
   }
 
