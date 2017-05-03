@@ -25,6 +25,7 @@ module.exports.SNS = class SNS extends EventEmitter {
       process.env.AWS_TOPIC_ARN = 'SOME_TOPIC_ARN';
     }
 
+    console.log('pens', process.env.NO_SUBSCRIPTION);
     if (!process.env.NO_SUBSCRIPTION) {
       this.getEndpoint(() => {
         this.startServer(() => {
@@ -32,7 +33,7 @@ module.exports.SNS = class SNS extends EventEmitter {
         });
       });
     } else {
-      this.emit('ready');
+      setTimeout(() => {this.emit('ready');}, 1);
     }
   }
 
@@ -93,11 +94,18 @@ module.exports.SNS = class SNS extends EventEmitter {
   }
 
   send(data) {
+    if (!data || !data.subject || !data.message) {
+      throw new Error('Invalid data to SNS.send()');
+    }
+
+    console.log('sending');
+
     this.sns.publish({
       Subject: data.subject,
       Message: JSON.stringify(data.message),
       TopicArn: process.env.AWS_TOPIC_ARN,
-    }, (error) => {
+    }, (error, result) => {
+      console.log('sss', error, result)
       if (error) {
         throw error;
       }

@@ -23,7 +23,7 @@ describe('SNS Class', function () {
       .get('/latest/meta-data/public-ipv4')
       .reply(200, '\n127.0.0.1\n');
 
-    nock('https://sns.eu-west-1.amazonaws.com:443', {"encodedQueryParams":true})
+    nock('https://sns.eu-west-1.amazonaws.com:443', { encodedQueryParams: true })
       .post('/', (body) => {
         return body.Action === 'Subscribe';
       })
@@ -65,9 +65,9 @@ describe('SNS Class', function () {
         ];
       });
 
-    nock('https://sns.eu-west-1.amazonaws.com:443', {"encodedQueryParams":true})
+    nock('https://sns.eu-west-1.amazonaws.com:443', { encodedQueryParams: true })
       .post('/', (body) => {
-        return body.Action == 'ConfirmSubscription'
+        return body.Action === 'ConfirmSubscription';
       })
       .reply(200, "<ConfirmSubscriptionResponse xmlns=\"http://sns.amazonaws.com/doc/2010-03-31/\">\n  <ConfirmSubscriptionResult>\n    <SubscriptionArn>arn:aws:sns:eu-west-1:123123123:xxx:2aa27442-a9b1-40dc-b4cd-932470eeaafd</SubscriptionArn>\n  </ConfirmSubscriptionResult>\n  <ResponseMetadata>\n    <RequestId>0f106784-211f-5d37-8087-36fa48f62973</RequestId>\n  </ResponseMetadata>\n</ConfirmSubscriptionResponse>\n", [ 'x-amzn-RequestId',
         '0f106784-211f-5d37-8087-36fa48f62973',
@@ -77,6 +77,21 @@ describe('SNS Class', function () {
         '393',
         'Date',
         'Sat, 29 Apr 2017 10:15:05 GMT' ]);
+
+    nock('https://sns.eu-west-1.amazonaws.com:443', {"encodedQueryParams":true})
+      .post('/', (body) => {
+        return body.Action === 'Publish';
+      })
+      .reply(200, "<ErrorResponse xmlns=\"http://sns.amazonaws.com/doc/2010-03-31/\">\n  <Error>\n    <Type>Sender</Type>\n    <Code>InvalidClientTokenId</Code>\n    <Message>The security token included in the request is invalid.</Message>\n  </Error>\n  <RequestId>7adbdc24-77a1-5fe2-ac17-8da048e15fa4</RequestId>\n</ErrorResponse>\n", [ 'x-amzn-RequestId',
+        '7adbdc24-77a1-5fe2-ac17-8da048e15fa4',
+        'Content-Type',
+        'text/xml',
+        'Content-Length',
+        '305',
+        'Date',
+        'Wed, 03 May 2017 20:26:40 GMT' ]);
+
+
     this.sns = new SNS();
     this.sns.on('ready', done);
   });
@@ -228,6 +243,17 @@ describe('SNS Class', function () {
         ip.should.equal('178.0.0.1');
         done();
       }, true);
+    });
+  });
+
+  describe('#send', function() {
+    it ('throws error on invalid data', function(){
+      (function(){
+        this.sns.send({ subject: 'testSubject', _message: { foo: 'bar' } });
+      }).should.throw();
+    });
+    it ('sends request to SNS', function(){
+      this.sns.send({ subject: 'testSubject', message: { foo: 'bar' } });
     });
   });
 });
