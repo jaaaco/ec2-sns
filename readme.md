@@ -39,5 +39,5 @@ sns.on('ready', () => {
 * AWS_TOPIC_ARN (SNS topic has to be created first)
 * AWS_REGION (optional, defaults to eu-west-1)
 * AWS_SUBSCRIPTION_ENDPOINT (optional, overrides automatic one)
-
+* NO_SUBSCRIPTION (optional) if set it won't subscribe, but still can send messages to SNS Topic
 

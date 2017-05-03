@@ -40,11 +40,15 @@ module.exports.SNS = class SNS extends EventEmitter {
       unsubscribeAndTerminate(1);
     });
 
-    this.getEndpoint(() => {
-      this.startServer(() => {
-        this.subscribe();
+    if (!process.env.NO_SUBSCRIPTION) {
+      this.getEndpoint(() => {
+        this.startServer(() => {
+          this.subscribe();
+        });
       });
-    });
+    } else {
+      this.emit('ready');
+    }
   }
 
   startServer(done) {
