@@ -6,7 +6,6 @@
 AWS SNS Client that:
 * automatically subscribes to SNS topic, 
 * gets endpoint URL from EC2 instance public IP
-* terminates subscribtion on app exit
 
 Designed to run in AWS ECS / Docker environment.
 

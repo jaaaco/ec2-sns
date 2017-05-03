@@ -22,23 +22,6 @@ module.exports.SNS = class SNS extends EventEmitter {
     if (!process.env.AWS_TOPIC_ARN) {
       process.env.AWS_TOPIC_ARN = 'SOME_TOPIC_ARN';
     }
-    function unsubscribeAndTerminate(exitCode) {
-      if (!this.subscriptionArn) {
-        process.exit(exitCode || 0);
-      }
-
-      this.sns.unsubscribe({
-        SubscriptionArn: this.subscriptionArn,
-      }, (err) => {
-        process.exit(err ? 1 : 0);
-      });
-    }
-
-    process.on('SIGINT', unsubscribeAndTerminate);
-    process.on('uncaughtException', (e) => {
-      console.log('uncaughtException', e);
-      unsubscribeAndTerminate(1);
-    });
 
     if (!process.env.NO_SUBSCRIPTION) {
       this.getEndpoint(() => {
