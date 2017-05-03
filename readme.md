@@ -1,5 +1,6 @@
+[![npm](https://img.shields.io/npm/v/ec2-sns.svg)](https://www.npmjs.com/package/ec2-sns)
 [![Travis build status](https://travis-ci.org/jaaaco/ec2-sns.svg?branch=master)](https://travis-ci.org/jaaaco/ec2-sns/) 
-[![Coverage Status](https://coveralls.io/repos/github/jaaaco/ec2-sns/badge.svg)](https://coveralls.io/github/jaaaco/ec2-sns)
+[![Coveralls](https://img.shields.io/coveralls/jaaaco/ec2-sns.svg)](https://coveralls.io/github/jaaaco/ec2-sns)
 
 # EC2 SNS Client
 
