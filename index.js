@@ -22,9 +22,9 @@ module.exports.SNS = class SNS extends EventEmitter {
     if (!process.env.AWS_TOPIC_ARN) {
       process.env.AWS_TOPIC_ARN = 'SOME_TOPIC_ARN';
     }
-    function unsubscribeAndTerminate(exitCode = 0) {
+    function unsubscribeAndTerminate(exitCode) {
       if (!this.subscriptionArn) {
-        process.exit(exitCode);
+        process.exit(exitCode || 0);
       }
 
       this.sns.unsubscribe({
@@ -48,8 +48,8 @@ module.exports.SNS = class SNS extends EventEmitter {
   }
 
   startServer(done) {
-    function endResponse(res, statusCode = 200) {
-      res.statusCode = statusCode;
+    function endResponse(res, statusCode) {
+      res.statusCode = statusCode || 200;
       res.setHeader('Content-Type', 'text/plain');
       res.end();
     }
@@ -103,17 +103,17 @@ module.exports.SNS = class SNS extends EventEmitter {
     });
   }
 
-  send({ subject, message = {} }) {
+  send(data) {
     this.sns.publish({
-      Subject: subject,
-      Message: JSON.stringify(message),
+      Subject: data.subject,
+      Message: JSON.stringify(data.message),
       TopicArn: process.env.AWS_TOPIC_ARN,
     }, (error, result) => {
       console.log('send', error, result);
     });
   }
 
-  getEndpoint(done, ignoreEnv = false) {
+  getEndpoint(done, ignoreEnv) {
     if (process.env.AWS_SUBSCRIPTION_ENDPOINT && !ignoreEnv) {
       // getting public IP, check http://docs.aws.amazon.co
       // using endpoint from env (testing only)
