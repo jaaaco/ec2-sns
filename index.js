@@ -121,15 +121,9 @@ module.exports.SNS = class SNS extends EventEmitter {
       done();
     } else {
       // getting public IP, check http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
-      http.get('http://169.254.169.254/latest/meta-data/local-ipv4', (res) => {
-        let rawData = '';
-        res.on('data', (chunk) => { rawData += chunk; });
-        res.on('end', () => {
-          this.subscriptionEndpoint = `http://${S(rawData).trim().toString()}:8081`;
-          done();
-        });
-      }).on('error', (e) => {
-        throw new Error('Unable to get public IP', e);
+      this.getIP((ip) => {
+        this.subscriptionEndpoint = `http://${ip}:8081`;
+        done();
       });
     }
   }
@@ -145,4 +139,18 @@ module.exports.SNS = class SNS extends EventEmitter {
       }
     });
   }
+
+  getIP(done, privateIP) {
+    // getting public IP, check http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
+    http.get(`http://169.254.169.254/latest/meta-data/${privateIP ? 'local' : 'public'}-ipv4`, (res) => {
+      let rawData = '';
+      res.on('data', (chunk) => { rawData += chunk; });
+      res.on('end', () => {
+        done(S(rawData).trim().toString());
+      });
+    }).on('error', (e) => {
+      throw new Error('Unable to get IP', e);
+    });
+  }
+
 };

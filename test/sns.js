@@ -19,7 +19,7 @@ const http = require('http');
 describe('SNS Class', function () {
   before(function (done) {
     nock('http://169.254.169.254')
-      .get('/latest/meta-data/local-ipv4')
+      .get('/latest/meta-data/public-ipv4')
       .reply(200, '\n127.0.0.1\n');
 
     nock('https://sns.eu-west-1.amazonaws.com:443', {"encodedQueryParams":true})
@@ -204,7 +204,7 @@ describe('SNS Class', function () {
   describe('#getEndpoint', function() {
     before(function() {
       nock('http://169.254.169.254')
-        .get('/latest/meta-data/local-ipv4')
+        .get('/latest/meta-data/public-ipv4')
         .reply(500);
     });
     it('should throw error one network problems', function() {
@@ -218,6 +218,15 @@ describe('SNS Class', function () {
       this.sns.getEndpoint(doneCB);
       this.sns.subscriptionEndpoint.should.equal('test-env');
       doneCB.should.be.calledOnce();
+    });
+    it('get private IP', function(done) {
+      nock('http://169.254.169.254')
+        .get('/latest/meta-data/local-ipv4')
+        .reply(200, '\n178.0.0.1\n');
+      this.sns.getIP((ip) => {
+        ip.should.equal('178.0.0.1');
+        done();
+      }, true);
     });
   });
 });
